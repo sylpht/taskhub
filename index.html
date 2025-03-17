@@ -1,0 +1,3048 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskHub - Профессиональная платформа управления задачами</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Основная цветовая схема */
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --primary-light: #7209b7;
+            --secondary: #f72585;
+            --secondary-light: #ff9e00;
+            --success: #2dc653;
+            --warning: #ffbe0b;
+            --danger: #e5383b;
+            --info: #4cc9f0;
+            
+            /* Нейтральные цвета */
+            --white: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --black: #000000;
+            
+            /* Тени */
+            --shadow-sm: 0 .125rem .25rem rgba(0, 0, 0, .075);
+            --shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+            --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, .175);
+            
+            /* Радиусы скругления */
+            --radius-sm: 0.25rem;
+            --radius: 0.5rem;
+            --radius-lg: 1rem;
+            --radius-pill: 50rem;
+            
+            /* Переходы и анимации */
+            --transition: all 0.3s ease;
+            
+            /* Размеры элементов */
+            --navbar-height: 4rem;
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 70px;
+            
+            /* Шрифты */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-2xl: 2rem;
+            --font-size-3xl: 2.5rem;
+        }
+        
+        /* Темная тема */
+        [data-theme="dark"] {
+            --primary: #4cc9f0;
+            --primary-dark: #3a86ff;
+            --primary-light: #8338ec;
+            --secondary: #ff006e;
+            --secondary-light: #fb5607;
+            --success: #39e75f;
+            --warning: #ffdd00;
+            --danger: #ff5a5f;
+            --info: #48cae4;
+            
+            --white: #1a1a2e;
+            --gray-100: #1a1a2e;
+            --gray-200: #16213e;
+            --gray-300: #0f3460;
+            --gray-400: #406882;
+            --gray-500: #5b8fb9;
+            --gray-600: #7fb5e6;
+            --gray-700: #a9d6e5;
+            --gray-800: #caf0f8;
+            --gray-900: #e0fbfc;
+            --black: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size);
+            line-height: 1.5;
+            color: var(--gray-900);
+            background-color: var(--gray-100);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            transition: var(--transition);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            color: var(--primary-dark);
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        button {
+            cursor: pointer;
+        }
+        
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--gray-200);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--gray-400);
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--gray-500);
+        }
+        
+        /* Основные стили макета */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Боковая панель */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+        
+        .sidebar-collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar-header {
+            height: var(--navbar-height);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .sidebar-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: var(--font-size-lg);
+        }
+        
+        .sidebar-title {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--gray-900);
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity 0.2s ease, width 0.2s ease;
+        }
+        
+        .sidebar-collapsed .sidebar-title {
+            width: 0;
+            opacity: 0;
+        }
+        
+        .sidebar-menu {
+            padding: 1.5rem 0;
+        }
+        
+        .menu-category {
+            padding: 0 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-600);
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+        
+        .sidebar-collapsed .menu-category {
+            opacity: 0;
+        }
+        
+        .menu-item {
+            list-style: none;
+        }
+        
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--gray-700);
+            font-weight: 500;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-link:hover {
+            color: var(--primary);
+            background-color: var(--gray-100);
+        }
+        
+        .menu-link.active {
+            color: var(--primary);
+            background-color: var(--gray-100);
+            border-left-color: var(--primary);
+        }
+        
+        .menu-icon {
+            font-size: var(--font-size-lg);
+            width: 24px;
+            text-align: center;
+        }
+        
+        .menu-text {
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity 0.2s ease, width 0.2s ease;
+        }
+        
+        .sidebar-collapsed .menu-text {
+            width: 0;
+            opacity: 0;
+        }
+        
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            flex-shrink: 0;
+        }
+        
+        .user-info {
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity 0.2s ease, width 0.2s ease;
+        }
+        
+        .sidebar-collapsed .user-info {
+            width: 0;
+            opacity: 0;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            color: var(--gray-900);
+        }
+        
+        .user-role {
+            font-size: var(--font-size-xs);
+            color: var(--gray-600);
+        }
+        
+        .sidebar-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background-color: var(--gray-100);
+            color: var(--gray-600);
+            border-radius: 50%;
+            cursor: pointer;
+            position: absolute;
+            right: -16px;
+            top: calc(var(--navbar-height) / 2);
+            transform: translateY(-50%);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+            z-index: 10;
+        }
+        
+        .sidebar-toggle:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .sidebar-collapsed .sidebar-toggle {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        
+        /* Основной контент */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+        }
+        
+        .sidebar-collapsed ~ .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        /* Верхняя навигационная панель */
+        .navbar {
+            height: var(--navbar-height);
+            background-color: var(--white);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+        
+        .navbar-start {
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-title {
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+            color: var(--gray-900);
+            margin-right: 2rem;
+        }
+        
+        .navbar-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .breadcrumb-item {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+        }
+        
+        .breadcrumb-separator {
+            color: var(--gray-400);
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--gray-900);
+            font-weight: 500;
+        }
+        
+        .navbar-end {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: auto;
+        }
+        
+        .navbar-search {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-pill);
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            font-size: var(--font-size-sm);
+            width: 240px;
+            transition: var(--transition);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: var(--white);
+            width: 320px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            pointer-events: none;
+        }
+        
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .action-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            background-color: var(--white);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .action-button:hover {
+            background-color: var(--gray-100);
+            color: var(--primary);
+        }
+        
+        .action-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: var(--white);
+            font-size: 10px;
+            font-weight: 600;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--white);
+        }
+        
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            background-color: var(--white);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--gray-100);
+            color: var(--primary);
+        }
+        
+        /* Основной контент страницы */
+        .page-content {
+            padding: 1.5rem;
+        }
+        
+        /* Дашборд */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-title {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+        }
+        
+        .stat-primary .stat-icon {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .stat-success .stat-icon {
+            background-color: rgba(45, 198, 83, 0.1);
+            color: var(--success);
+        }
+        
+        .stat-warning .stat-icon {
+            background-color: rgba(255, 190, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .stat-danger .stat-icon {
+            background-color: rgba(229, 56, 59, 0.1);
+            color: var(--danger);
+        }
+        
+        .stat-value {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-description {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+        
+        .stat-progress {
+            margin-bottom: 0.75rem;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: var(--gray-200);
+            border-radius: var(--radius-pill);
+            overflow: hidden;
+        }
+        
+        .progress-value {
+            height: 100%;
+            border-radius: var(--radius-pill);
+        }
+        
+        .stat-primary .progress-value {
+            background-color: var(--primary);
+        }
+        
+        .stat-success .progress-value {
+            background-color: var(--success);
+        }
+        
+        .stat-warning .progress-value {
+            background-color: var(--warning);
+        }
+        
+        .stat-danger .progress-value {
+            background-color: var(--danger);
+        }
+        
+        .stat-footer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: var(--font-size-xs);
+        }
+        
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .trend-up {
+            color: var(--success);
+        }
+        
+        .trend-down {
+            color: var(--danger);
+        }
+        
+        .stat-period {
+            color: var(--gray-500);
+        }
+        
+        /* Секция задач */
+        .tasks-section {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .section-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            line-height: 1.5;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--gray-700);
+            border-color: var(--gray-300);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--gray-100);
+            color: var(--primary);
+        }
+        
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 50%;
+        }
+        
+        /* Фильтры задач */
+        .tasks-filters {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            background-color: var(--gray-50);
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-label {
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .filter-options {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .filter-btn {
+            padding: 0.375rem 0.75rem;
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            color: var(--gray-600);
+            background-color: var(--white);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-pill);
+            transition: var(--transition);
+        }
+        
+        .filter-btn:hover {
+            background-color: var(--gray-100);
+            color: var(--primary);
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+        
+        .tasks-search {
+            margin-left: auto;
+            position: relative;
+            flex: 1;
+            max-width: 300px;
+        }
+        
+        .tasks-search-input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-pill);
+            background-color: var(--white);
+            color: var(--gray-800);
+            font-size: var(--font-size-sm);
+            transition: var(--transition);
+        }
+        
+        .tasks-search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .tasks-search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            pointer-events: none;
+        }
+        
+        /* Список задач */
+        .tasks-list {
+            padding: 1rem 1.5rem;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            transition: var(--transition);
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-item:hover {
+            background-color: var(--gray-50);
+        }
+        
+        .task-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-400);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        
+        .task-checkbox:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .task-checkbox:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--white);
+            font-size: 12px;
+        }
+        
+        .task-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .task-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .task-title {
+            font-weight: 500;
+            color: var(--gray-900);
+            transition: var(--transition);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        
+        .task-completed .task-title {
+            text-decoration: line-through;
+            color: var(--gray-500);
+        }
+        
+        .task-badge {
+            padding: 0.25rem 0.5rem;
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            border-radius: var(--radius-pill);
+            white-space: nowrap;
+        }
+        
+        .badge-primary {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .badge-success {
+            background-color: rgba(45, 198, 83, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-warning {
+            background-color: rgba(255, 190, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .badge-danger {
+            background-color: rgba(229, 56, 59, 0.1);
+            color: var(--danger);
+        }
+        
+        .task-details {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: var(--font-size-xs);
+            color: var(--gray-600);
+        }
+        
+        .task-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .task-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+        
+        .task-date {
+            font-size: var(--font-size-xs);
+            color: var(--gray-600);
+        }
+        
+        .task-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+        
+        .task-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            background-color: var(--white);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+        }
+        
+        .task-action-btn:hover {
+            background-color: var(--gray-100);
+        }
+        
+        .edit-btn:hover {
+            color: var(--primary);
+        }
+        
+        .delete-btn:hover {
+            color: var(--danger);
+        }
+        
+        /* Пагинация */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .pagination-info {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+            margin-right: auto;
+        }
+        
+        .pagination-pages {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            color: var(--gray-700);
+            background-color: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+        
+        .page-btn:hover {
+            background-color: var(--gray-100);
+            color: var(--primary);
+        }
+        
+        .page-btn.active {
+            background-color: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+        
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .modal-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 50%;
+            color: var(--gray-500);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .modal-close:hover {
+            background-color: var(--gray-100);
+            color: var(--danger);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        /* Формы */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: var(--font-size-sm);
+            color: var(--gray-700);
+        }
+        
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: var(--font-size);
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--gray-900);
+            background-color: var(--white);
+            background-clip: padding-box;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .form-select {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: var(--font-size);
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--gray-900);
+            background-color: var(--white);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 16px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            appearance: none;
+            transition: var(--transition);
+        }
+        
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .form-text {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: var(--font-size-xs);
+            color: var(--gray-600);
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            margin-top: 0.25rem;
+            vertical-align: top;
+            cursor: pointer;
+        }
+        
+        .form-check-label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        
+        /* Дополнительные компоненты */
+        .file-upload {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .file-drop-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius);
+            background-color: var(--gray-50);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .file-drop-area:hover, .file-drop-area.dragover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .file-drop-icon {
+            font-size: var(--font-size-2xl);
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+        
+        .file-drop-message {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-drop-sub {
+            font-size: var(--font-size-xs);
+            color: var(--gray-500);
+        }
+        
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background-color: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+        }
+        
+        .file-icon {
+            font-size: var(--font-size-lg);
+            color: var(--primary);
+        }
+        
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .file-name {
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--gray-900);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .file-size {
+            font-size: var(--font-size-xs);
+            color: var(--gray-600);
+        }
+        
+        .file-remove {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            background-color: var(--white);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .file-remove:hover {
+            background-color: var(--gray-100);
+            color: var(--danger);
+        }
+        
+        /* Рабочие области с вкладками */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 1rem;
+        }
+        
+        .tab-item {
+            padding: 1rem 1.5rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .tab-item:hover {
+            color: var(--primary);
+        }
+        
+        .tab-item.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Тосты (уведомления) */
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 1050;
+        }
+        
+        .toast {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 1rem;
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            max-width: 350px;
+            animation: slideInRight 0.3s ease, fadeIn 0.3s ease;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .toast.hiding {
+            animation: slideOutRight 0.3s ease, fadeOut 0.3s ease;
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(100%);
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .toast-success .toast-icon {
+            background-color: rgba(45, 198, 83, 0.1);
+            color: var(--success);
+        }
+        
+        .toast-error .toast-icon {
+            background-color: rgba(229, 56, 59, 0.1);
+            color: var(--danger);
+        }
+        
+        .toast-warning .toast-icon {
+            background-color: rgba(255, 190, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .toast-info .toast-icon {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .toast-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .toast-title {
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            margin-bottom: 0.25rem;
+        }
+        
+        .toast-message {
+            font-size: var(--font-size-xs);
+            color: var(--gray-600);
+        }
+        
+        .toast-close {
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .toast-close:hover {
+            color: var(--gray-900);
+        }
+        
+        /* Адаптивный дизайн */
+        @media (max-width: 992px) {
+            .sidebar {
+                left: -280px;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar-collapsed ~ .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 990;
+                opacity: 0;
+                visibility: hidden;
+                transition: var(--transition);
+            }
+            
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar-search {
+                display: none;
+            }
+            
+            .tasks-filters {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .tasks-search {
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .section-actions {
+                display: none;
+            }
+            
+            .section-actions-mobile {
+                display: flex;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            
+            .section-actions-mobile .btn {
+                flex: 1;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .navbar {
+                padding: 0 1rem;
+            }
+            
+            .navbar-breadcrumb {
+                display: none;
+            }
+            
+            .page-content {
+                padding: 1rem;
+            }
+            
+            .modal {
+                width: 95%;
+            }
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .slide-in-up {
+            animation: slideInUp 0.3s ease;
+        }
+        
+        /* Утилиты */
+        .d-none {
+            display: none !important;
+        }
+        
+        .d-flex {
+            display: flex !important;
+        }
+        
+        .flex-column {
+            flex-direction: column !important;
+        }
+        
+        .align-items-center {
+            align-items: center !important;
+        }
+        
+        .justify-content-between {
+            justify-content: space-between !important;
+        }
+        
+        .justify-content-center {
+            justify-content: center !important;
+        }
+        
+        .text-center {
+            text-align: center !important;
+        }
+        
+        .text-right {
+            text-align: right !important;
+        }
+        
+        .m-0 {
+            margin: 0 !important;
+        }
+        
+        .mt-1 {
+            margin-top: 0.5rem !important;
+        }
+        
+        .mt-2 {
+            margin-top: 1rem !important;
+        }
+        
+        .mb-1 {
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .mb-2 {
+            margin-bottom: 1rem !important;
+        }
+        
+        .mb-3 {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .p-0 {
+            padding: 0 !important;
+        }
+        
+        .w-100 {
+            width: 100% !important;
+        }
+        
+        .text-primary {
+            color: var(--primary) !important;
+        }
+        
+        .text-success {
+            color: var(--success) !important;
+        }
+        
+        .text-warning {
+            color: var(--warning) !important;
+        }
+        
+        .text-danger {
+            color: var(--danger) !important;
+        }
+        
+        .text-info {
+            color: var(--info) !important;
+        }
+        
+        .bg-primary {
+            background-color: var(--primary) !important;
+        }
+        
+        .bg-success {
+            background-color: var(--success) !important;
+        }
+        
+        .bg-warning {
+            background-color: var(--warning) !important;
+        }
+        
+        .bg-danger {
+            background-color: var(--danger) !important;
+        }
+        
+        .bg-info {
+            background-color: var(--info) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Боковая панель -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <div class="sidebar-logo">TH</div>
+                    <h1 class="sidebar-title">TaskHub</h1>
+                </div>
+            </div>
+            
+            <div class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-category">Главное меню</div>
+                <ul class="menu-items">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link active">
+                            <i class="menu-icon fas fa-tachometer-alt"></i>
+                            <span class="menu-text">Дашборд</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <i class="menu-icon fas fa-tasks"></i>
+                            <span class="menu-text">Мои задачи</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <i class="menu-icon fas fa-calendar-alt"></i>
+                            <span class="menu-text">Календарь</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <i class="menu-icon fas fa-folder"></i>
+                            <span class="menu-text">Проекты</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="menu-category">Организация</div>
+                <ul class="menu-items">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <i class="menu-icon fas fa-tag"></i>
+                            <span class="menu-text">Метки</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <i class="menu-icon fas fa-users"></i>
+                            <span class="menu-text">Команда</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <i class="menu-icon fas fa-chart-bar"></i>
+                            <span class="menu-text">Аналитика</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="menu-category">Настройки</div>
+                <ul class="menu-items">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <i class="menu-icon fas fa-user-cog"></i>
+                            <span class="menu-text">Профиль</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <i class="menu-icon fas fa-cog"></i>
+                            <span class="menu-text">Настройки</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <i class="menu-icon fas fa-question-circle"></i>
+                            <span class="menu-text">Помощь</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar">АП</div>
+                    <div class="user-info">
+                        <div class="user-name">Александр Петров</div>
+                        <div class="user-role">Премиум аккаунт</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Основной контент -->
+        <main class="main-content">
+            <!-- Верхняя навигационная панель -->
+            <nav class="navbar">
+                <div class="navbar-start">
+                    <button class="menu-toggle d-none" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="navbar-title">Дашборд</h1>
+                    <div class="navbar-breadcrumb">
+                        <span class="breadcrumb-item">Главная</span>
+                        <span class="breadcrumb-separator">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                        <span class="breadcrumb-item active">Дашборд</span>
+                    </div>
+                </div>
+                
+                <div class="navbar-end">
+                    <div class="navbar-search">
+                        <i class="search-icon fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Поиск...">
+                    </div>
+                    
+                    <div class="navbar-actions">
+                        <button class="action-button">
+                            <i class="fas fa-bell"></i>
+                            <span class="action-badge">5</span>
+                        </button>
+                        <button class="action-button">
+                            <i class="fas fa-envelope"></i>
+                            <span class="action-badge">3</span>
+                        </button>
+                        <button class="theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Основной контент страницы -->
+            <div class="page-content">
+                <!-- Статистика -->
+                <div class="dashboard-grid">
+                    <div class="stat-card stat-primary">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Всего задач</h3>
+                            <div class="stat-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">48</div>
+                        <div class="stat-description">Активных задач: 32</div>
+                        <div class="stat-progress">
+                            <div class="progress-bar">
+                                <div class="progress-value" style="width: 67%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-footer">
+                            <div class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>12%</span>
+                            </div>
+                            <div class="stat-period">За последние 7 дней</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card stat-success">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Выполнено</h3>
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">16</div>
+                        <div class="stat-description">Эффективность: 33%</div>
+                        <div class="stat-progress">
+                            <div class="progress-bar">
+                                <div class="progress-value" style="width: 33%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-footer">
+                            <div class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>8%</span>
+                            </div>
+                            <div class="stat-period">За последние 7 дней</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card stat-warning">
+                        <div class="stat-header">
+                            <h3 class="stat-title">В процессе</h3>
+                            <div class="stat-icon">
+                                <i class="fas fa-spinner"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">24</div>
+                        <div class="stat-description">Срочных: 8</div>
+                        <div class="stat-progress">
+                            <div class="progress-bar">
+                                <div class="progress-value" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-footer">
+                            <div class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>5%</span>
+                            </div>
+                            <div class="stat-period">За последние 7 дней</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card stat-danger">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Просрочено</h3>
+                            <div class="stat-icon">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">8</div>
+                        <div class="stat-description">Критичных: 3</div>
+                        <div class="stat-progress">
+                            <div class="progress-bar">
+                                <div class="progress-value" style="width: 17%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-footer">
+                            <div class="stat-trend trend-down">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>3%</span>
+                            </div>
+                            <div class="stat-period">За последние 7 дней</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Секция задач -->
+                <div class="tasks-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Мои задачи</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-outline" id="exportBtn">
+                                <i class="fas fa-download"></i>
+                                <span>Экспорт</span>
+                            </button>
+                            <button class="btn btn-primary" id="addTaskBtn">
+                                <i class="fas fa-plus"></i>
+                                <span>Новая задача</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="tasks-filters">
+                        <div class="filter-group">
+                            <div class="filter-label">Статус:</div>
+                            <div class="filter-options">
+                                <button class="filter-btn active" data-filter="all">Все</button>
+                                <button class="filter-btn" data-filter="active">Активные</button>
+                                <button class="filter-btn" data-filter="completed">Выполненные</button>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <div class="filter-label">Приоритет:</div>
+                            <div class="filter-options">
+                                <button class="filter-btn active" data-filter="all">Все</button>
+                                <button class="filter-btn" data-filter="high">Высокий</button>
+                                <button class="filter-btn" data-filter="medium">Средний</button>
+                                <button class="filter-btn" data-filter="low">Низкий</button>
+                            </div>
+                        </div>
+                        
+                        <div class="tasks-search">
+                            <i class="tasks-search-icon fas fa-search"></i>
+                            <input type="text" class="tasks-search-input" placeholder="Поиск задач...">
+                        </div>
+                    </div>
+                    
+                    <div class="tasks-list" id="tasksList">
+                        <!-- Задача 1 -->
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="task1">
+                            <div class="task-content">
+                                <div class="task-header">
+                                    <h3 class="task-title">Создать дизайн нового лендинга</h3>
+                                    <span class="task-badge badge-primary">Дизайн</span>
+                                    <span class="task-badge badge-danger">Высокий</span>
+                                </div>
+                                <div class="task-details">
+                                    <div class="task-detail">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>Сегодня, 17:00</span>
+                                    </div>
+                                    <div class="task-detail">
+                                        <i class="fas fa-user"></i>
+                                        <span>Александр П.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="task-meta">
+                                <span class="task-date">Создано: 15 марта</span>
+                            </div>
+                            <div class="task-actions">
+                                <button class="task-action-btn edit-btn">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <button class="task-action-btn delete-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Задача 2 -->
+                        <div class="task-item task-completed">
+                            <input type="checkbox" class="task-checkbox" id="task2" checked>
+                            <div class="task-content">
+                                <div class="task-header">
+                                    <h3 class="task-title">Обновить документацию проекта</h3>
+                                    <span class="task-badge badge-primary">Документация</span>
+                                    <span class="task-badge badge-success">Низкий</span>
+                                </div>
+                                <div class="task-details">
+                                    <div class="task-detail">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>14 марта, 12:00</span>
+                                    </div>
+                                    <div class="task-detail">
+                                        <i class="fas fa-user"></i>
+                                        <span>Александр П.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="task-meta">
+                                <span class="task-date">Создано: 13 марта</span>
+                            </div>
+                            <div class="task-actions">
+                                <button class="task-action-btn edit-btn">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <button class="task-action-btn delete-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Задача 3 -->
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="task3">
+                            <div class="task-content">
+                                <div class="task-header">
+                                    <h3 class="task-title">Подготовить презентацию для клиента</h3>
+                                    <span class="task-badge badge-primary">Презентация</span>
+                                    <span class="task-badge badge-warning">Средний</span>
+                                </div>
+                                <div class="task-details">
+                                    <div class="task-detail">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>Завтра, 10:00</span>
+                                    </div>
+                                    <div class="task-detail">
+                                        <i class="fas fa-user"></i>
+                                        <span>Александр П.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="task-meta">
+                                <span class="task-date">Создано: 14 марта</span>
+                            </div>
+                            <div class="task-actions">
+                                <button class="task-action-btn edit-btn">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <button class="task-action-btn delete-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Задача 4 -->
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="task4">
+                            <div class="task-content">
+                                <div class="task-header">
+                                    <h3 class="task-title">Исправить баги в мобильной версии</h3>
+                                    <span class="task-badge badge-primary">Разработка</span>
+                                    <span class="task-badge badge-danger">Высокий</span>
+                                </div>
+                                <div class="task-details">
+                                    <div class="task-detail">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>16 марта, 18:00</span>
+                                    </div>
+                                    <div class="task-detail">
+                                        <i class="fas fa-user"></i>
+                                        <span>Александр П.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="task-meta">
+                                <span class="task-date">Создано: 14 марта</span>
+                            </div>
+                            <div class="task-actions">
+                                <button class="task-action-btn edit-btn">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <button class="task-action-btn delete-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Задача 5 -->
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" id="task5">
+                            <div class="task-content">
+                                <div class="task-header">
+                                    <h3 class="task-title">Организовать встречу команды</h3>
+                                    <span class="task-badge badge-primary">Встреча</span>
+                                    <span class="task-badge badge-warning">Средний</span>
+                                </div>
+                                <div class="task-details">
+                                    <div class="task-detail">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>17 марта, 11:00</span>
+                                    </div>
+                                    <div class="task-detail">
+                                        <i class="fas fa-user"></i>
+                                        <span>Александр П.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="task-meta">
+                                <span class="task-date">Создано: 15 марта</span>
+                            </div>
+                            <div class="task-actions">
+                                <button class="task-action-btn edit-btn">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <button class="task-action-btn delete-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pagination">
+                        <div class="pagination-info">Показано 1-5 из 48 задач</div>
+                        <div class="pagination-pages">
+                            <button class="page-btn disabled">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                            <button class="page-btn">10</button>
+                            <button class="page-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Модальное окно добавления/редактирования задачи -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Новая задача</h2>
+                <button class="modal-close" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="taskForm">
+                    <div class="form-group">
+                        <label for="taskTitle" class="form-label">Название задачи</label>
+                        <input type="text" id="taskTitle" class="form-control" placeholder="Введите название задачи" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskDescription" class="form-label">Описание</label>
+                        <textarea id="taskDescription" class="form-control" rows="3" placeholder="Введите описание задачи"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskCategory" class="form-label">Категория</label>
+                        <select id="taskCategory" class="form-select">
+                            <option value="design">Дизайн</option>
+                            <option value="development">Разработка</option>
+                            <option value="documentation">Документация</option>
+                            <option value="meeting">Встреча</option>
+                            <option value="presentation">Презентация</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskPriority" class="form-label">Приоритет</label>
+                        <select id="taskPriority" class="form-select">
+                            <option value="low">Низкий</option>
+                            <option value="medium" selected>Средний</option>
+                            <option value="high">Высокий</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskDueDate" class="form-label">Срок выполнения</label>
+                        <input type="datetime-local" id="taskDueDate" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Вложения</label>
+                        <div class="file-upload">
+                            <div class="file-drop-area" id="fileDropArea">
+                                <i class="file-drop-icon fas fa-cloud-upload-alt"></i>
+                                <div class="file-drop-message">Перетащите файлы сюда или кликните для загрузки</div>
+                                <div class="file-drop-sub">Максимальный размер файла: 10MB</div>
+                            </div>
+                            <input type="file" id="fileInput" class="d-none" multiple>
+                            <div class="file-list" id="fileList"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelTask">Отмена</button>
+                <button class="btn btn-primary" id="saveTask">Сохранить</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Контейнер уведомлений -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Данные приложения
+            let tasks = [
+                {
+                    id: 1,
+                    title: 'Создать дизайн нового лендинга',
+                    description: 'Разработать дизайн лендинга для нового продукта компании.',
+                    category: 'design',
+                    priority: 'high',
+                    dueDate: '2025-03-15T17:00',
+                    completed: false,
+                    createdAt: '2025-03-15',
+                    assignee: 'Александр П.'
+                },
+                {
+                    id: 2,
+                    title: 'Обновить документацию проекта',
+                    description: 'Обновить техническую документацию проекта с учетом последних изменений.',
+                    category: 'documentation',
+                    priority: 'low',
+                    dueDate: '2025-03-14T12:00',
+                    completed: true,
+                    createdAt: '2025-03-13',
+                    assignee: 'Александр П.'
+                },
+                {
+                    id: 3,
+                    title: 'Подготовить презентацию для клиента',
+                    description: 'Подготовить презентацию о результатах работы за месяц для встречи с клиентом.',
+                    category: 'presentation',
+                    priority: 'medium',
+                    dueDate: '2025-03-16T10:00',
+                    completed: false,
+                    createdAt: '2025-03-14',
+                    assignee: 'Александр П.'
+                },
+                {
+                    id: 4,
+                    title: 'Исправить баги в мобильной версии',
+                    description: 'Устранить ошибки в мобильной версии приложения согласно отчету тестирования.',
+                    category: 'development',
+                    priority: 'high',
+                    dueDate: '2025-03-16T18:00',
+                    completed: false,
+                    createdAt: '2025-03-14',
+                    assignee: 'Александр П.'
+                },
+                {
+                    id: 5,
+                    title: 'Организовать встречу команды',
+                    description: 'Запланировать и организовать еженедельную встречу команды разработки.',
+                    category: 'meeting',
+                    priority: 'medium',
+                    dueDate: '2025-03-17T11:00',
+                    completed: false,
+                    createdAt: '2025-03-15',
+                    assignee: 'Александр П.'
+                }
+            ];
+            
+            // Текущие фильтры
+            let currentFilters = {
+                status: 'all',
+                priority: 'all',
+                search: ''
+            };
+            
+            // Переключатель боковой панели
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-collapsed');
+            });
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+            
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+            
+            // Переключатель темы
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            
+            themeToggle.addEventListener('click', function() {
+                if (body.getAttribute('data-theme') === 'dark') {
+                    body.removeAttribute('data-theme');
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.setAttribute('data-theme', 'dark');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+            
+            // Проверка сохраненной темы в localStorage
+            if (localStorage.getItem('theme') === 'dark') {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            // Модальное окно задачи
+            const taskModal = document.getElementById('taskModal');
+            const addTaskBtn = document.getElementById('addTaskBtn');
+            const closeModal = document.getElementById('closeModal');
+            const cancelTask = document.getElementById('cancelTask');
+            const saveTask = document.getElementById('saveTask');
+            const taskForm = document.getElementById('taskForm');
+            
+            addTaskBtn.addEventListener('click', function() {
+                taskModal.classList.add('active');
+                document.getElementById('taskTitle').focus();
+            });
+            
+            function closeTaskModal() {
+                taskModal.classList.remove('active');
+                taskForm.reset();
+            }
+            
+            closeModal.addEventListener('click', closeTaskModal);
+            cancelTask.addEventListener('click', closeTaskModal);
+            
+            taskModal.addEventListener('click', function(e) {
+                if (e.target === taskModal) {
+                    closeTaskModal();
+                }
+            });
+            
+            // Фильтрация задач
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const tasksSearchInput = document.querySelector('.tasks-search-input');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filterType = this.parentNode.parentNode.querySelector('.filter-label').textContent.trim().toLowerCase().replace(':', '');
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    // Удалить активный класс у всех кнопок в этой группе
+                    this.parentNode.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Добавить активный класс этой кнопке
+                    this.classList.add('active');
+                    
+                    // Обновить текущие фильтры
+                    if (filterType.includes('статус')) {
+                        currentFilters.status = filterValue;
+                    } else if (filterType.includes('приоритет')) {
+                        currentFilters.priority = filterValue;
+                    }
+                    
+                    // Применить фильтры
+                    applyFilters();
+                });
+            });
+            
+            tasksSearchInput.addEventListener('input', function() {
+                currentFilters.search = this.value.trim().toLowerCase();
+                applyFilters();
+            });
+            
+            function applyFilters() {
+                const filteredTasks = tasks.filter(task => {
+                    // Фильтр по статусу
+                    if (currentFilters.status !== 'all') {
+                        if (currentFilters.status === 'completed' && !task.completed) return false;
+                        if (currentFilters.status === 'active' && task.completed) return false;
+                    }
+                    
+                    // Фильтр по приоритету
+                    if (currentFilters.priority !== 'all' && task.priority !== currentFilters.priority) return false;
+                    
+                    // Фильтр по поисковому запросу
+                    if (currentFilters.search !== '' && !task.title.toLowerCase().includes(currentFilters.search)) return false;
+                    
+                    return true;
+                });
+                
+                renderTasks(filteredTasks);
+            }
+            
+            // Отображение задач
+            function renderTasks(taskList) {
+                const tasksListElement = document.getElementById('tasksList');
+                tasksListElement.innerHTML = '';
+                
+                if (taskList.length === 0) {
+                    tasksListElement.innerHTML = `
+                        <div class="text-center p-4">
+                            <i class="fas fa-search" style="font-size: 3rem; color: var(--gray-300); margin-bottom: 1rem;"></i>
+                            <p class="text-gray-600">Задачи не найдены</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                taskList.forEach(task => {
+                    const taskElement = document.createElement('div');
+                    taskElement.className = `task-item${task.completed ? ' task-completed' : ''}`;
+                    
+                    // Форматирование даты выполнения
+                    const dueDate = new Date(task.dueDate);
+                    const today = new Date();
+                    const tomorrow = new Date(today);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    
+                    let dueDateText;
+                    if (dueDate.toDateString() === today.toDateString()) {
+                        dueDateText = `Сегодня, ${dueDate.getHours()}:${String(dueDate.getMinutes()).padStart(2, '0')}`;
+                    } else if (dueDate.toDateString() === tomorrow.toDateString()) {
+                        dueDateText = `Завтра, ${dueDate.getHours()}:${String(dueDate.getMinutes()).padStart(2, '0')}`;
+                    } else {
+                        dueDateText = `${dueDate.getDate()} ${getMonthName(dueDate.getMonth())}, ${dueDate.getHours()}:${String(dueDate.getMinutes()).padStart(2, '0')}`;
+                    }
+                    
+                    // Определение классов для категории и приоритета
+                    let priorityClass = '';
+                    if (task.priority === 'high') priorityClass = 'badge-danger';
+                    else if (task.priority === 'medium') priorityClass = 'badge-warning';
+                    else if (task.priority === 'low') priorityClass = 'badge-success';
+                    
+                    let priorityText = '';
+                    if (task.priority === 'high') priorityText = 'Высокий';
+                    else if (task.priority === 'medium') priorityText = 'Средний';
+                    else if (task.priority === 'low') priorityText = 'Низкий';
+                    
+                    let categoryText = '';
+                    if (task.category === 'design') categoryText = 'Дизайн';
+                    else if (task.category === 'development') categoryText = 'Разработка';
+                    else if (task.category === 'documentation') categoryText = 'Документация';
+                    else if (task.category === 'meeting') categoryText = 'Встреча';
+                    else if (task.category === 'presentation') categoryText = 'Презентация';
+                    else categoryText = 'Другое';
+                    
+                    taskElement.innerHTML = `
+                        <input type="checkbox" class="task-checkbox" id="task${task.id}" ${task.completed ? 'checked' : ''}>
+                        <div class="task-content">
+                            <div class="task-header">
+                                <h3 class="task-title">${task.title}</h3>
+                                <span class="task-badge badge-primary">${categoryText}</span>
+                                <span class="task-badge ${priorityClass}">${priorityText}</span>
+                            </div>
+                            <div class="task-details">
+                                <div class="task-detail">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>${dueDateText}</span>
+                                </div>
+                                <div class="task-detail">
+                                    <i class="fas fa-user"></i>
+                                    <span>${task.assignee}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-meta">
+                            <span class="task-date">Создано: ${task.createdAt}</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="task-action-btn edit-btn" data-id="${task.id}">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="task-action-btn delete-btn" data-id="${task.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Обработчик события изменения статуса задачи
+                    const checkbox = taskElement.querySelector('.task-checkbox');
+                    checkbox.addEventListener('change', function() {
+                        const taskId = parseInt(this.id.replace('task', ''));
+                        const taskIndex = tasks.findIndex(t => t.id === taskId);
+                        
+                        if (taskIndex !== -1) {
+                            tasks[taskIndex].completed = this.checked;
+                            taskElement.classList.toggle('task-completed', this.checked);
+                            
+                            // Показать уведомление
+                            if (this.checked) {
+                                showToast('Задача выполнена', `Задача "${tasks[taskIndex].title}" отмечена как выполненная`, 'success');
+                            } else {
+                                showToast('Задача активна', `Задача "${tasks[taskIndex].title}" отмечена как активная`, 'info');
+                            }
+                            
+                            // Обновить статистику
+                            updateStats();
+                        }
+                    });
+                    
+                    tasksListElement.appendChild(taskElement);
+                });
+                
+                // Обработчики событий для кнопок редактирования и удаления
+                document.querySelectorAll('.edit-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        editTask(parseInt(this.getAttribute('data-id')));
+                    });
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        deleteTask(parseInt(this.getAttribute('data-id')));
+                    });
+                });
+            }
+            
+            // Функция для получения названия месяца
+            function getMonthName(month) {
+                const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+                return months[month];
+            }
+            
+            // Редактирование задачи
+            function editTask(id) {
+                const task = tasks.find(t => t.id === id);
+                if (!task) return;
+                
+                document.querySelector('.modal-title').textContent = 'Редактировать задачу';
+                document.getElementById('taskTitle').value = task.title;
+                document.getElementById('taskDescription').value = task.description || '';
+                document.getElementById('taskCategory').value = task.category;
+                document.getElementById('taskPriority').value = task.priority;
+                document.getElementById('taskDueDate').value = task.dueDate;
+                
+                saveTask.setAttribute('data-id', id);
+                taskModal.classList.add('active');
+            }
+            
+            // Удаление задачи
+            function deleteTask(id) {
+                const taskIndex = tasks.findIndex(t => t.id === id);
+                if (taskIndex === -1) return;
+                
+                const taskTitle = tasks[taskIndex].title;
+                tasks.splice(taskIndex, 1);
+                applyFilters();
+                updateStats();
+                
+                showToast('Задача удалена', `Задача "${taskTitle}" успешно удалена`, 'success');
+            }
+            
+            // Сохранение задачи
+            saveTask.addEventListener('click', function() {
+                const taskTitle = document.getElementById('taskTitle').value.trim();
+                if (!taskTitle) {
+                    showToast('Ошибка', 'Название задачи не может быть пустым', 'error');
+                    return;
+                }
+                
+                const editId = parseInt(this.getAttribute('data-id')) || null;
+                
+                if (editId) {
+                    // Редактирование существующей задачи
+                    const taskIndex = tasks.findIndex(t => t.id === editId);
+                    if (taskIndex !== -1) {
+                        tasks[taskIndex].title = taskTitle;
+                        tasks[taskIndex].description = document.getElementById('taskDescription').value.trim();
+                        tasks[taskIndex].category = document.getElementById('taskCategory').value;
+                        tasks[taskIndex].priority = document.getElementById('taskPriority').value;
+                        tasks[taskIndex].dueDate = document.getElementById('taskDueDate').value;
+                        
+                        showToast('Задача обновлена', `Задача "${taskTitle}" успешно обновлена`, 'success');
+                    }
+                } else {
+                    // Создание новой задачи
+                    const newTask = {
+                        id: Date.now(),
+                        title: taskTitle,
+                        description: document.getElementById('taskDescription').value.trim(),
+                        category: document.getElementById('taskCategory').value,
+                        priority: document.getElementById('taskPriority').value,
+                        dueDate: document.getElementById('taskDueDate').value,
+                        completed: false,
+                        createdAt: new Date().toLocaleDateString('ru-RU'),
+                        assignee: 'Александр П.'
+                    };
+                    
+                    tasks.unshift(newTask);
+                    showToast('Задача создана', `Задача "${taskTitle}" успешно создана`, 'success');
+                }
+                
+                closeTaskModal();
+                applyFilters();
+                updateStats();
+            });
+            
+            // Загрузка файлов
+            const fileDropArea = document.getElementById('fileDropArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileList = document.getElementById('fileList');
+            
+            fileDropArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileDropArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+            
+            fileDropArea.addEventListener('dragleave', function() {
+                this.classList.remove('dragover');
+            });
+            
+            fileDropArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            function handleFiles(files) {
+                if (files.length === 0) return;
+                
+                Array.from(files).forEach(file => {
+                    // Проверка размера файла (10MB)
+                    if (file.size > 10 * 1024 * 1024) {
+                        showToast('Ошибка', `Файл "${file.name}" превышает максимальный размер (10MB)`, 'error');
+                        return;
+                    }
+                    
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    
+                    // Определение иконки файла
+                    let fileIcon = 'fa-file';
+                    if (file.type.includes('image')) fileIcon = 'fa-file-image';
+                    else if (file.type.includes('pdf')) fileIcon = 'fa-file-pdf';
+                    else if (file.type.includes('word')) fileIcon = 'fa-file-word';
+                    else if (file.type.includes('excel')) fileIcon = 'fa-file-excel';
+                    else if (file.type.includes('zip')) fileIcon = 'fa-file-archive';
+                    
+                    // Форматирование размера файла
+                    let fileSize = '';
+                    if (file.size < 1024) fileSize = `${file.size} B`;
+                    else if (file.size < 1024 * 1024) fileSize = `${(file.size / 1024).toFixed(1)} KB`;
+                    else fileSize = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+                    
+                    fileItem.innerHTML = `
+                        <i class="file-icon fas ${fileIcon}"></i>
+                        <div class="file-info">
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${fileSize}</div>
+                        </div>
+                        <button class="file-remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    
+                    const removeBtn = fileItem.querySelector('.file-remove');
+                    removeBtn.addEventListener('click', function() {
+                        fileItem.remove();
+                    });
+                    
+                    fileList.appendChild(fileItem);
+                });
+            }
+            
+            // Уведомления
+            function showToast(title, message, type = 'info') {
+                const toastContainer = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                
+                let iconClass = 'fa-info-circle';
+                if (type === 'success') iconClass = 'fa-check-circle';
+                else if (type === 'error') iconClass = 'fa-exclamation-circle';
+                else if (type === 'warning') iconClass = 'fa-exclamation-triangle';
+                
+                toast.innerHTML = `
+                    <div class="toast-icon">
+                        <i class="fas ${iconClass}"></i>
+                    </div>
+                    <div class="toast-content">
+                        <div class="toast-title">${title}</div>
+                        <div class="toast-message">${message}</div>
+                    </div>
+                    <div class="toast-close">
+                        <i class="fas fa-times"></i>
+                    </div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                
+                const closeBtn = toast.querySelector('.toast-close');
+                closeBtn.addEventListener('click', function() {
+                    toast.classList.add('hiding');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                });
+                
+                // Автоматическое закрытие через 5 секунд
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.classList.add('hiding');
+                        setTimeout(() => {
+                            if (toast.parentNode) {
+                                toast.remove();
+                            }
+                        }, 300);
+                    }
+                }, 5000);
+            }
+            
+            // Обновление статистики
+            function updateStats() {
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(task => task.completed).length;
+                const activeTasks = totalTasks - completedTasks;
+                const overdueTasks = tasks.filter(task => {
+                    if (task.completed) return false;
+                    const dueDate = new Date(task.dueDate);
+                    return dueDate < new Date();
+                }).length;
+                
+                const highPriorityTasks = tasks.filter(task => task.priority === 'high' && !task.completed).length;
+                
+                document.querySelector('.stat-primary .stat-value').textContent = totalTasks;
+                document.querySelector('.stat-primary .stat-description').textContent = `Активных задач: ${activeTasks}`;
+                document.querySelector('.stat-primary .progress-value').style.width = `${(activeTasks / totalTasks) * 100}%`;
+                
+                document.querySelector('.stat-success .stat-value').textContent = completedTasks;
+                document.querySelector('.stat-success .stat-description').textContent = `Эффективность: ${Math.round((completedTasks / totalTasks) * 100)}%`;
+                document.querySelector('.stat-success .progress-value').style.width = `${(completedTasks / totalTasks) * 100}%`;
+                
+                document.querySelector('.stat-warning .stat-value').textContent = activeTasks;
+                document.querySelector('.stat-warning .stat-description').textContent = `Срочных: ${highPriorityTasks}`;
+                document.querySelector('.stat-warning .progress-value').style.width = `${(activeTasks / totalTasks) * 100}%`;
+                
+                document.querySelector('.stat-danger .stat-value').textContent = overdueTasks;
+                document.querySelector('.stat-danger .stat-description').textContent = `Критичных: ${tasks.filter(task => task.priority === 'high' && !task.completed && new Date(task.dueDate) < new Date()).length}`;
+                document.querySelector('.stat-danger .progress-value').style.width = `${(overdueTasks / totalTasks) * 100}%`;
+                
+                // Обновление информации о пагинации
+                document.querySelector('.pagination-info').textContent = `Показано 1-${Math.min(5, totalTasks)} из ${totalTasks} задач`;
+            }
+            
+            // Инициализация приложения
+            function init() {
+                // Применение начальных фильтров
+                applyFilters();
+                
+                // Обновление статистики
+                updateStats();
+                
+                // Проверка адаптивного дизайна
+                function checkMobile() {
+                    if (window.innerWidth <= 992) {
+                        sidebar.classList.add('sidebar-collapsed');
+                        menuToggle.classList.remove('d-none');
+                    } else {
+                        sidebar.classList.remove('sidebar-collapsed');
+                        sidebar.classList.remove('active');
+                        sidebarOverlay.classList.remove('active');
+                        menuToggle.classList.add('d-none');
+                    }
+                }
+                
+                checkMobile();
+                window.addEventListener('resize', checkMobile);
+            }
+            
+            // Запуск приложения
+            init();
+        });
+    </script>
+    <!-- Подключение Chart.js (для диаграмм) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+
+<!-- Подключение Chart.js для диаграмм -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+
+<!-- Подключение модулей приложения -->
+<script type="module">
+    // Создаем объект глобального хранилища для доступа из всех модулей
+    window.storageManager = window.indexedDBStorage || {
+        getTasks: () => {
+            return JSON.parse(localStorage.getItem('tasks') || '[]');
+        },
+        saveTasks: (tasks) => {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        },
+        getTask: (id) => {
+            const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+            return tasks.find(task => task.id === id) || null;
+        },
+        saveTask: (task) => {
+            const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+            const index = tasks.findIndex(t => t.id === task.id);
+            if (index !== -1) {
+                tasks[index] = task;
+            } else {
+                tasks.push(task);
+            }
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            return task;
+        }
+    };
+
+    // Инициируем обновление интерфейса при добавлении/изменении задач
+    window.updateUI = function() {
+        if (typeof window.applyFilters === 'function') {
+            window.applyFilters();
+        } else {
+            console.log('Обновление интерфейса...');
+        }
+    };
+
+    // Функции редактирования и отображения задач
+    window.editTask = function(id) {
+        console.log('Редактирование задачи:', id);
+        // Поиск существующей функции редактирования в оригинальном коде
+        if (typeof window.showTaskModal === 'function') {
+            window.showTaskModal(id);
+        }
+    };
+
+    window.showTaskModal = function(id = null) {
+        // Имитация вызова модального окна создания/редактирования задачи
+        const taskModal = document.getElementById('taskModal');
+        if (taskModal) {
+            taskModal.classList.add('active');
+            if (id) {
+                document.querySelector('.modal-title').textContent = 'Редактировать задачу';
+                // Установка ID задачи для формы редактирования
+                document.getElementById('saveTask').setAttribute('data-id', id);
+            } else {
+                document.querySelector('.modal-title').textContent = 'Новая задача';
+                document.getElementById('saveTask').removeAttribute('data-id');
+            }
+        }
+    };
+
+    // Создание глобальных событий для обновления элементов
+    window.dispatchTaskEvent = function(eventName, taskId) {
+        window.dispatchEvent(new CustomEvent(eventName, { detail: { taskId } }));
+    };
+</script>
+
+<!-- Подключение Chart.js для диаграмм -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+
+<!-- Подключение модулей приложения -->
+<script type="module">
+    // Создаем объект глобального хранилища для доступа из всех модулей
+    window.storageManager = window.indexedDBStorage || {
+        getTasks: () => {
+            return JSON.parse(localStorage.getItem('tasks') || '[]');
+        },
+        saveTasks: (tasks) => {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        },
+        getTask: (id) => {
+            const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+            return tasks.find(task => task.id === id) || null;
+        },
+        saveTask: (task) => {
+            const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+            const index = tasks.findIndex(t => t.id === task.id);
+            if (index !== -1) {
+                tasks[index] = task;
+            } else {
+                tasks.push(task);
+            }
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            return task;
+        }
+    };
+
+    // Инициируем обновление интерфейса при добавлении/изменении задач
+    window.updateUI = function() {
+        if (typeof window.applyFilters === 'function') {
+            window.applyFilters();
+        } else {
+            console.log('Обновление интерфейса...');
+        }
+    };
+
+    // Функции редактирования и отображения задач
+    window.editTask = function(id) {
+        console.log('Редактирование задачи:', id);
+        // Поиск существующей функции редактирования в оригинальном коде
+        if (typeof window.showTaskModal === 'function') {
+            window.showTaskModal(id);
+        }
+    };
+
+    window.showTaskModal = function(id = null) {
+        // Имитация вызова модального окна создания/редактирования задачи
+        const taskModal = document.getElementById('taskModal');
+        if (taskModal) {
+            taskModal.classList.add('active');
+            if (id) {
+                document.querySelector('.modal-title').textContent = 'Редактировать задачу';
+                // Установка ID задачи для формы редактирования
+                document.getElementById('saveTask').setAttribute('data-id', id);
+            } else {
+                document.querySelector('.modal-title').textContent = 'Новая задача';
+                document.getElementById('saveTask').removeAttribute('data-id');
+            }
+        }
+    };
+
+    // Создание глобальных событий для обновления элементов
+    window.dispatchTaskEvent = function(eventName, taskId) {
+        window.dispatchEvent(new CustomEvent(eventName, { detail: { taskId } }));
+    };
+</script>
+
+<!-- Подключение Chart.js для диаграмм -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+
+<!-- Подключение модулей приложения -->
+<script type="module">
+    // Создаем объект глобального хранилища для доступа из всех модулей
+    window.storageManager = window.indexedDBStorage || {
+        getTasks: () => {
+            return JSON.parse(localStorage.getItem('tasks') || '[]');
+        },
+        saveTasks: (tasks) => {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        },
+        getTask: (id) => {
+            const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+            return tasks.find(task => task.id === id) || null;
+        },
+        saveTask: (task) => {
+            const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+            const index = tasks.findIndex(t => t.id === task.id);
+            if (index !== -1) {
+                tasks[index] = task;
+            } else {
+                tasks.push(task);
+            }
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            return task;
+        }
+    };
+
+    // Инициируем обновление интерфейса при добавлении/изменении задач
+    window.updateUI = function() {
+        if (typeof window.applyFilters === 'function') {
+            window.applyFilters();
+        } else {
+            console.log('Обновление интерфейса...');
+        }
+    };
+
+    // Функции редактирования и отображения задач
+    window.editTask = function(id) {
+        console.log('Редактирование задачи:', id);
+        // Поиск существующей функции редактирования в оригинальном коде
+        if (typeof window.showTaskModal === 'function') {
+            window.showTaskModal(id);
+        }
+    };
+
+    window.showTaskModal = function(id = null) {
+        // Имитация вызова модального окна создания/редактирования задачи
+        const taskModal = document.getElementById('taskModal');
+        if (taskModal) {
+            taskModal.classList.add('active');
+            if (id) {
+                document.querySelector('.modal-title').textContent = 'Редактировать задачу';
+                // Установка ID задачи для формы редактирования
+                document.getElementById('saveTask').setAttribute('data-id', id);
+            } else {
+                document.querySelector('.modal-title').textContent = 'Новая задача';
+                document.getElementById('saveTask').removeAttribute('data-id');
+            }
+        }
+    };
+
+    // Создание глобальных событий для обновления элементов
+    window.dispatchTaskEvent = function(eventName, taskId) {
+        window.dispatchEvent(new CustomEvent(eventName, { detail: { taskId } }));
+    };
+</script>
+
+<!-- Импорт модулей в нужном порядке -->
+<script src="assets/js/features/indexedDB.js"></script>
+<script src="assets/js/features/onboarding.js"></script>
+<script src="assets/js/features/timeTracker.js"></script>
+<script src="assets/js/features/dataExport.js"></script>
+<script src="assets/js/features/kanban.js"></script>
+<script src="assets/js/features/charts.js"></script>
+
+<!-- Добавьте следующие строки перед закрывающим тегом </body> -->
+
+<!-- Подключение Chart.js для диаграмм -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+
+<!-- Подключение основных модулей приложения -->
+<script type="module" src="assets/js/app.js"></script>
+
+<!-- Подключение модуля хранилища -->
+<script type="module" src="assets/js/storage/indexedDB.js"></script>
+
+<!-- Подключение функциональных модулей -->
+<script type="module" src="assets/js/features/onboarding.js"></script>
+<script type="module" src="assets/js/features/timeTracker.js"></script>
+<script type="module" src="assets/js/features/dataExport.js"></script>
+<script type="module" src="assets/js/features/kanban.js"></script>
+<script type="module" src="assets/js/features/charts.js"></script>
+
+</body>
+</html>

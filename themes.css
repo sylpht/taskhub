@@ -1,0 +1,501 @@
+/* themes.css - Улучшенные темы оформления */
+
+:root {
+    /* Основные цвета в формате RGB для использования в rgba() */
+    --primary-rgb: 67, 97, 238;
+    --secondary-rgb: 247, 37, 133;
+    --success-rgb: 45, 198, 83;
+    --warning-rgb: 255, 190, 11;
+    --danger-rgb: 229, 56, 59;
+    --info-rgb: 76, 201, 240;
+    
+    --gray-100-rgb: 248, 249, 250;
+    --gray-200-rgb: 233, 236, 239;
+    --gray-300-rgb: 222, 226, 230;
+    --gray-400-rgb: 206, 212, 218;
+    --gray-500-rgb: 173, 181, 189;
+    --gray-600-rgb: 108, 117, 125;
+    --gray-700-rgb: 73, 80, 87;
+    --gray-800-rgb: 52, 58, 64;
+    --gray-900-rgb: 33, 37, 41;
+    
+    /* Переменные для градиентов */
+    --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    --gradient-success: linear-gradient(135deg, var(--success) 0%, #4ade80 100%);
+    --gradient-warning: linear-gradient(135deg, var(--warning) 0%, #fbbf24 100%);
+    --gradient-danger: linear-gradient(135deg, var(--danger) 0%, #f87171 100%);
+    --gradient-info: linear-gradient(135deg, var(--info) 0%, #67e8f9 100%);
+    
+    /* Переменные для теней с разными цветами */
+    --shadow-primary: 0 8px 16px rgba(var(--primary-rgb), 0.15);
+    --shadow-success: 0 8px 16px rgba(var(--success-rgb), 0.15);
+    --shadow-warning: 0 8px 16px rgba(var(--warning-rgb), 0.15);
+    --shadow-danger: 0 8px 16px rgba(var(--danger-rgb), 0.15);
+    --shadow-info: 0 8px 16px rgba(var(--info-rgb), 0.15);
+}
+
+/* Светлая тема (по умолчанию) */
+body {
+    /* Фоны и поверхности */
+    --body-bg: #f8f9fa;
+    --surface-bg: #ffffff;
+    --surface-bg-hover: #f5f5f5;
+    --surface-bg-active: #eef2ff;
+    --sidebar-bg: #ffffff;
+    --navbar-bg: #ffffff;
+    --card-bg: #ffffff;
+    --modal-bg: #ffffff;
+    --dropdown-bg: #ffffff;
+    
+    /* Текст */
+    --text-primary: #212529;
+    --text-secondary: #495057;
+    --text-muted: #6c757d;
+    --text-disabled: #adb5bd;
+    --text-on-primary: #ffffff;
+    --text-on-success: #ffffff;
+    --text-on-warning: #212529;
+    --text-on-danger: #ffffff;
+    --text-on-info: #ffffff;
+    
+    /* Границы и разделители */
+    --border-color: #dee2e6;
+    --border-color-hover: #ced4da;
+    --divider-color: #e9ecef;
+    
+    /* Дополнительные цвета */
+    --scrollbar-bg: #e9ecef;
+    --scrollbar-thumb: #adb5bd;
+    --tooltip-bg: #212529;
+    --tooltip-color: #ffffff;
+    --code-bg: #f8f9fa;
+    --code-color: #212529;
+    
+    /* Эффекты */
+    --hover-opacity: 0.08;
+    --active-opacity: 0.12;
+    --disabled-opacity: 0.38;
+    
+    /* Цвета для статуса задач */
+    --task-completed-bg: rgba(var(--success-rgb), 0.05);
+    --task-completed-color: rgba(var(--success-rgb), 0.8);
+    --task-overdue-color: rgba(var(--danger-rgb), 0.8);
+    
+    /* Тени для кнопок и карточек */
+    --btn-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    --btn-shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.12);
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --card-shadow-hover: 0 6px 15px rgba(0, 0, 0, 0.1);
+    
+    /* Фон для страницы входа/регистрации */
+    --auth-bg: #f8f9fa url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSgxMzUpIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSJyZ2JhKDAsIDAsIDAsIDAuMDMpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+');
+}
+
+/* Темная тема */
+body[data-theme="dark"] {
+    /* Фоны и поверхности */
+    --body-bg: #121212;
+    --surface-bg: #1e1e1e;
+    --surface-bg-hover: #252525;
+    --surface-bg-active: #2c2c2c;
+    --sidebar-bg: #1a1a1a;
+    --navbar-bg: #1a1a1a;
+    --card-bg: #1e1e1e;
+    --modal-bg: #1e1e1e;
+    --dropdown-bg: #1e1e1e;
+    
+    /* Текст */
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #888888;
+    --text-disabled: #666666;
+    --text-on-primary: #ffffff;
+    --text-on-success: #ffffff;
+    --text-on-warning: #121212;
+    --text-on-danger: #ffffff;
+    --text-on-info: #ffffff;
+    
+    /* Границы и разделители */
+    --border-color: #333333;
+    --border-color-hover: #444444;
+    --divider-color: #2c2c2c;
+    
+    /* Дополнительные цвета */
+    --scrollbar-bg: #333333;
+    --scrollbar-thumb: #666666;
+    --tooltip-bg: #e0e0e0;
+    --tooltip-color: #121212;
+    --code-bg: #2d2d2d;
+    --code-color: #e0e0e0;
+    
+    /* Цвета для статуса задач */
+    --task-completed-bg: rgba(var(--success-rgb), 0.1);
+    --task-completed-color: rgba(var(--success-rgb), 0.9);
+    --task-overdue-color: rgba(var(--danger-rgb), 0.9);
+    
+    /* Тени для кнопок и карточек */
+    --btn-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    --btn-shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.3);
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    --card-shadow-hover: 0 6px 15px rgba(0, 0, 0, 0.35);
+    
+    /* Фон для страницы входа/регистрации */
+    --auth-bg: #121212 url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSgxMzUpIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMDMpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+');
+    
+    /* Переопределение общих цветов для темной темы */
+    --primary: #4cc9f0;
+    --primary-dark: #3a86ff;
+    --primary-light: #8338ec;
+    --secondary: #ff006e;
+    --secondary-light: #fb5607;
+    --success: #39e75f;
+    --warning: #ffdd00;
+    --danger: #ff5a5f;
+    --info: #48cae4;
+    
+    /* Переопределение RGB переменных */
+    --primary-rgb: 76, 201, 240;
+    --secondary-rgb: 255, 0, 110;
+    --success-rgb: 57, 231, 95;
+    --warning-rgb: 255, 221, 0;
+    --danger-rgb: 255, 90, 95;
+    --info-rgb: 72, 202, 228;
+    
+    /* Переопределение нейтральных цветов */
+    --white: #1a1a2e;
+    --gray-100: #1a1a2e;
+    --gray-200: #16213e;
+    --gray-300: #0f3460;
+    --gray-400: #406882;
+    --gray-500: #5b8fb9;
+    --gray-600: #7fb5e6;
+    --gray-700: #a9d6e5;
+    --gray-800: #caf0f8;
+    --gray-900: #e0fbfc;
+    --black: #ffffff;
+    
+    /* Переопределение RGB для нейтральных цветов */
+    --gray-100-rgb: 26, 26, 46;
+    --gray-200-rgb: 22, 33, 62;
+    --gray-300-rgb: 15, 52, 96;
+    --gray-400-rgb: 64, 104, 130;
+    --gray-500-rgb: 91, 143, 185;
+    --gray-600-rgb: 127, 181, 230;
+    --gray-700-rgb: 169, 214, 229;
+    --gray-800-rgb: 202, 240, 248;
+    --gray-900-rgb: 224, 251, 252;
+    
+    /* Переопределение градиентов */
+    --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    --gradient-success: linear-gradient(135deg, var(--success) 0%, #20E050 100%);
+    --gradient-warning: linear-gradient(135deg, var(--warning) 0%, #FFC107 100%);
+    --gradient-danger: linear-gradient(135deg, var(--danger) 0%, #FF0066 100%);
+    --gradient-info: linear-gradient(135deg, var(--info) 0%, #38B2CA 100%);
+}
+
+/* Применение переменных тем к элементам интерфейса */
+body {
+    background-color: var(--body-bg);
+    color: var(--text-primary);
+}
+
+.sidebar {
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+}
+
+.navbar {
+    background-color: var(--navbar-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header, .sidebar-footer {
+    border-color: var(--border-color);
+}
+
+.menu-link {
+    color: var(--text-secondary);
+}
+
+.menu-link:hover {
+    background-color: var(--surface-bg-hover);
+}
+
+.menu-link.active {
+    color: var(--primary);
+    background-color: var(--surface-bg-active);
+    border-left-color: var(--primary);
+}
+
+.stat-card {
+    background-color: var(--card-bg);
+    box-shadow: var(--card-shadow);
+}
+
+.stat-card:hover {
+    box-shadow: var(--card-shadow-hover);
+}
+
+.tasks-section, .task-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+.task-title {
+    color: var(--text-primary);
+}
+
+.task-item:hover {
+    background-color: var(--surface-bg-hover);
+}
+
+.task-item.task-completed {
+    background-color: var(--task-completed-bg);
+}
+
+.task-item.task-completed .task-title {
+    color: var(--task-completed-color);
+}
+
+.task-detail {
+    color: var(--text-muted);
+}
+
+.task-date {
+    color: var(--text-muted);
+}
+
+.modal-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+    background-color: var(--modal-bg);
+    border-color: var(--border-color);
+}
+
+.form-control, .form-select {
+    background-color: var(--surface-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    background-color: var(--surface-bg);
+}
+
+.form-label {
+    color: var(--text-secondary);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--text-on-primary);
+    border-color: var(--primary);
+    box-shadow: var(--btn-shadow);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    box-shadow: var(--btn-shadow-hover);
+}
+
+.btn-outline {
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+    background-color: transparent;
+}
+
+.btn-outline:hover {
+    background-color: var(--surface-bg-hover);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Кастомный скроллбар */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary);
+}
+
+/* Адаптация фильтров и поиска */
+.filter-btn {
+    background-color: var(--surface-bg);
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+}
+
+.filter-btn:hover {
+    background-color: var(--surface-bg-hover);
+    color: var(--primary);
+}
+
+.filter-btn.active {
+    background-color: var(--primary);
+    color: var(--text-on-primary);
+    border-color: var(--primary);
+}
+
+.tasks-search-input {
+    background-color: var(--surface-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.tasks-search-input:focus {
+    background-color: var(--surface-bg);
+    border-color: var(--primary);
+}
+
+.tasks-search-icon {
+    color: var(--text-muted);
+}
+
+/* Адаптация Канбан-доски */
+.kanban-column {
+    background-color: var(--surface-bg);
+    border-color: var(--border-color);
+}
+
+.kanban-column-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.kanban-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+.kanban-card:hover {
+    box-shadow: var(--card-shadow-hover);
+}
+
+/* Уведомления (тосты) */
+.toast {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+    box-shadow: var(--card-shadow);
+}
+
+/* Адаптация диаграмм */
+.chart-container {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+/* Режим высокой контрастности */
+body.high-contrast {
+    --text-primary: #ffffff;
+    --text-secondary: #f0f0f0;
+    --text-muted: #d0d0d0;
+    --border-color: #ffffff;
+    --surface-bg-hover: rgba(255, 255, 255, 0.1);
+    --surface-bg-active: rgba(255, 255, 255, 0.15);
+    
+    filter: contrast(1.2);
+}
+
+/* Режим уменьшенного движения для доступности */
+body.reduced-motion * {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Отключение анимаций */
+body.animations-disabled * {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+}
+
+/* Режим увеличенных шрифтов для улучшения доступности */
+body.large-text {
+    --font-size-xs: 0.875rem;
+    --font-size-sm: 1rem;
+    --font-size: 1.125rem;
+    --font-size-lg: 1.375rem;
+    --font-size-xl: 1.625rem;
+    --font-size-2xl: 2.25rem;
+    --font-size-3xl: 2.75rem;
+    
+    line-height: 1.7;
+}
+
+/* Стили для фокуса на элементах - для улучшения доступности */
+*:focus-visible {
+    outline: 2px solid var(--primary) !important;
+    outline-offset: 2px !important;
+}
+
+/* Режим увеличенного контраста */
+.increased-spacing {
+    --padding-btn: 0.75rem 1.5rem;
+    --spacing-form: 1.5rem;
+    --spacing-card: 1.5rem;
+    --spacing-modal: 1.75rem;
+    --spacing-sidebar: 1.25rem;
+    
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1.25rem;
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+}
+
+/* Стили для режима печати */
+@media print {
+    body {
+        --body-bg: white;
+        --text-primary: black;
+        --text-secondary: #333;
+        --text-muted: #555;
+        background-color: white;
+        color: black;
+    }
+    
+    .sidebar, .navbar, .filter-btn, .task-actions, .pagination, 
+    .modal-overlay, .toast-container, .action-button {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .stat-card, .tasks-section, .task-item {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+    }
+    
+    .page-content {
+        padding: 0 !important;
+    }
+    
+    .task-badge {
+        border: 1px solid #ddd !important;
+        background: white !important;
+        color: black !important;
+    }
+}
